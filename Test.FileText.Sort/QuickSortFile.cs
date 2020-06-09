@@ -24,22 +24,24 @@ namespace Test.FileText.Sort
             _stringComp = new Test.Text.Format.StringComparer();
         }
 
-        static public  void Begin(string fileNameForSort, Tree tree, string fileNameDataSort = "file_sort.txt", bool saveFile = true, int partSizeByte = 104857600)
+        static public void Begin(string fileNameForSort, string fileNameDataSort = "file_sort.txt", bool saveFile = true, int partSizeByte = 104857600)
         {
-            Do(fileNameForSort, tree, saveFile, partSizeByte);
-           CombineSortFilesRecursive(tree, fileNameDataSort);
+            Tree tree1 = new Tree(fileNameForSort);
+            Do(fileNameForSort, tree1, saveFile, partSizeByte);
+            CombineSortFilesRecursive(tree1, fileNameDataSort);
+            tree1 = null;
         }
 
         /// <summary>
         /// объединить все файлы
         /// </summary>
         /// <param name="tree"></param>
-        private static  void CombineSortFilesRecursive(Tree tree,string fileNameSort)
+        private static void CombineSortFilesRecursive(Tree tree, string fileNameSort)
         {
 
             if (tree.Children == null || tree.Children.Length == 0)
                 return;
-          
+
 
             if (tree.Children.Length == 1)
             {
@@ -58,7 +60,7 @@ namespace Test.FileText.Sort
                 CombineSortFilesRecursive(item, fileNameSort);
 
         }
-     
+
 
         /// <summary>
         /// Сортирует файл по формату {num. text} с использование промежуточных файлов
@@ -67,7 +69,7 @@ namespace Test.FileText.Sort
         /// <param name="tree"> дерево вызовов для сохранения порядка</param>
         /// <param name="saveFile">сохранять ли исходный файл</param>
         /// <param name="partSizeByte"> размер сортированного блока файла</param>
-        static private void  Do(string fileName, Tree tree, bool saveFile = true, int partSizeByte = 104857600)
+        static private void Do(string fileName, Tree tree, bool saveFile = true, int partSizeByte = 104857600)
         {
 
             string fileName1 = $"{Task.CurrentId}_1.tmp";
@@ -79,16 +81,16 @@ namespace Test.FileText.Sort
                 using (var writer1 = new StreamWriter(fileName1))
                 using (var writer2 = new StreamWriter(fileName2))
                 {
-                    var str =  redaer.ReadLine();
+                    var str = redaer.ReadLine();
                     while (!redaer.EndOfStream)
                     {
-                        var line =  redaer.ReadLine();
+                        var line = redaer.ReadLine();
                         if (_stringComp.Compare(str, line) >= 0)
-                             writer1.WriteLine(line);
+                            writer1.WriteLine(line);
                         else
-                             writer2.WriteLine(line);
+                            writer2.WriteLine(line);
                     }
-                     writer1.WriteLine(str);
+                    writer1.WriteLine(str);
 
                 }
 
@@ -109,11 +111,11 @@ namespace Test.FileText.Sort
                     System.IO.File.Delete(fileName);
                 PQuickSort.ParallelQuickSort(strs);
                 Array.Reverse(strs);
-                 System.IO.File.WriteAllLines(fileName2, strs.Select(x => x.Str));
+                System.IO.File.WriteAllLines(fileName2, strs.Select(x => x.Str));
                 strs = null;
                 Tree tree1 = new Tree(fileName2, tree);
                 tree.FileName = null;
-                tree.SetChild(new Tree[] { tree1});
+                tree.SetChild(new Tree[] { tree1 });
 
             }
 

@@ -21,7 +21,7 @@ namespace Test.App1
         static void Main(string[] args)
         {
 
-            ScoreSeconds(() => FileWorker.Create("file.txt", 200), "Создание файла");
+            ScoreSeconds(() => FileWorker.Create("file.txt", 10240), "Создание файла");
 
         }
         static void ScoreSeconds(Action action, string textInfo)
